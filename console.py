@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -19,16 +20,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -115,42 +116,25 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """ Create an object of any class"""
-        try:
-            if not line:
-                raise SyntaxError()
+
+        total = line.split(" ")
+        if len(total) < 1:
+            print("** class name missing **")
+            return
+
+        if total[0] in HBNBCommand.classes:
             my_list = line.split(" ")
 
-            obj_class_name = my_list[0]
-
-            dicc_atrib = {}
+            obj = eval(my_list[0])()
 
             for key_values in my_list[1:]:
                 k, v = key_values.split("=")
-                if type(v) == int:
-                    dicc_atrib[k] = int(v)
-                if type(v) == float:
-                    dicc_atrib[k] = float(v)
-                if type(v) == str:
-                    dicc_atrib[k] = str(v)
-                else:
-                    pass
-            obj = eval(my_list[0])()
+                v = v.replace('_', " ")
+                setattr(obj, k, eval(v))
+
             obj.save()
             print("{}".format(obj.id))
-
-            """ if not args:
-                print("** class name missing **")
-                return
-            elif args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            new_instance = HBNBCommand.classes[args]()
-            storage.save()
-            print(new_instance.id)
-            storage.save() """
-        except SyntaxError:
-            print("** class name missing **")
-        except NameError:
+        else:
             print("** class doesn't exist **")
 
     def help_create(self):
@@ -346,6 +330,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
