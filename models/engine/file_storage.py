@@ -51,9 +51,8 @@ class FileStorage:
 
     def delete(self, obj=None):
         """ delete obj """
-        if obj is None:
-            return
-        for k in list(FileStorage.__objects.keys()):
-            if obj.id == k.split(".")[1] and k.split(".")[0] in str(obj):
-                FileStorage.__objects.pop(k, None)
+        if obj is not None:
+            key = obj.__class__.__name__ + "." + str(obj.id)
+            if key in FileStorage.__objects:
+                FileStorage.__objects.pop(key)
                 self.save()
