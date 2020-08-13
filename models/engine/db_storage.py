@@ -18,11 +18,6 @@ class DBStorage:
     __engine = None
     __session = None
 
-    all_class = {
-        "City": City,
-        "State": State,
-    }
-
     def __init__(self):
         """ Inicialize an instance of the class DBStorage """
 
@@ -32,28 +27,29 @@ class DBStorage:
         HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
         HBNB_ENV = getenv('HBNB_ENV')
 
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}:/{}'.format(
-            HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_HOST,
-            HBNB_MYSQL_DB), pool_pre_ping=True)
-
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
+                HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_HOST,
+                HBNB_MYSQL_DB), pool_pre_ping=True)
         if HBNB_ENV == 'tets':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ query session currenty of the database """
 
-        dicc = {}
-        if cls is None:
-            for valid_key, valid_class in DBStorage.all_class.items():
-                for instance in self.__session.query(valid_class):
-                    key = type(instance).__name__ + "." + instance.id
-                    dicc.update({key: instance})
-            return dicc
+        d = {}
+
+        if cls:
+            obj = self.__session.query(cls).all()
         else:
-            for instance in self.__session.query(cls):
-                key = type(instance).__name__ + "." + instance.id
-                dicc.update({key: instance})
-            return dicc
+            mycls = ['State', 'City']
+            obj = []
+            for namecls in mycls:
+                for o in self.__session.query(eval(namecls)):
+                    obj.append(o)
+        for item in obj:
+            k = type(item).__name__ + '.' + str(item.id)
+            d[k] = item
+        return d
 
     def new(self, obj):
         """ Add object to actually database """
@@ -69,7 +65,6 @@ class DBStorage:
 
     def reload(self):
         """ load storage """
-        # Create table
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
