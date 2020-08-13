@@ -1,34 +1,21 @@
 #!/usr/bin/python3
 """ """
-from tests.test_models.test_base_model import test_basemodel
+import unittest
+import pep8
 from models.user import User
 
-
-class test_User(test_basemodel):
+class Test_user(unittest.TestCase):
     """ """
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "User"
-        self.value = User
+    def test_pep8_User(self):
+        """Tests pep8 style"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/user.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_first_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.first_name), str)
+    def test_checking_for_docstring_User(self):
+        """test docstrings"""
+        self.assertIsNotNone(User.__doc__)
 
-    def test_last_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.last_name), str)
-
-    def test_email(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.email), str)
-
-    def test_password(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.password), str)
+if __name__ == "__main__":
+    unittest.main()
