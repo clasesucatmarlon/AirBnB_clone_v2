@@ -36,7 +36,7 @@ class DBStorage:
     def all(self, cls=None):
         """ query session currenty of the database """
 
-        dict_o = {}
+        """         dict_o = {}
         classes = {'State': State, 'City': City, 'User': User}
         if cls is None:
             for k, v in classes.items():
@@ -51,9 +51,9 @@ class DBStorage:
                 if hasattr(obj, '_sa_instance_state'):
                     delattr(obj, "_sa_instance_state")
                 dict_o[obj.__class__.__name__ + "." + str(obj.id)] = obj
-        return dict_o
+        return dict_o """
 
-        """         d = {}
+        d = {}
         if cls:
             obj = self.__session.query(cls).all()
             for instance in obj:
@@ -70,7 +70,7 @@ class DBStorage:
         for item in obj:
             k = type(item).__name__ + '.' + str(item.id)
             d[k] = item
-        return d """
+        return d
 
     def new(self, obj):
         """ Add object to actually database """
