@@ -56,11 +56,6 @@ class DBStorage:
         d = {}
         if cls:
             obj = self.__session.query(cls).all()
-            for instance in obj:
-                Try:
-                    delattr(obj, '_sa_instance_state')
-                Except:
-                    pass
         else:
             mycls = ['State', 'City', 'User']
             obj = []
