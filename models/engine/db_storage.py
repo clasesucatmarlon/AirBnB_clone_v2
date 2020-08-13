@@ -35,26 +35,13 @@ class DBStorage:
 
     def all(self, cls=None):
         """ query session currenty of the database """
-        """ dict_o = {}
-        classes = {'State': State, 'City': City, 'User': User}
-        if cls is None:
-            for k, v in classes.items():
-                query = self.__session.query(v).all()
-                for obj in query:
-                    delattr(obj, "_sa_instance_state")
-                    dict_o[obj.__class__.__name__ + "." + str(obj.id)] = obj
-        else:
-            query = self.__session.query(cls).all()
-            for obj in query:
-                delattr(obj, "_sa_instance_state")
-                dict_o[obj.__class__.__name__ + "." + str(obj.id)] = obj
-        return dict_o"""
+
         d = {}
 
         if cls:
             obj = self.__session.query(cls).all()
         else:
-            mycls = ['State', 'City', 'User']
+            mycls = ['State', 'City']
             obj = []
             for namecls in mycls:
                 for o in self.__session.query(eval(namecls)):

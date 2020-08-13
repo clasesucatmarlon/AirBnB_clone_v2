@@ -15,7 +15,7 @@ Base = declarative_base()
 class BaseModel:
     """A base class for all hbnb models"""
     id = Column('id', String(60), nullable=False, primary_key=True)
-
+    
     created_at = Column(
         'created_at',
         DateTime,
@@ -28,7 +28,8 @@ class BaseModel:
         nullable=False,
         default=datetime.utcnow()
     )
-
+    
+    
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
@@ -60,23 +61,15 @@ class BaseModel:
         storage.save()
 
     def to_dict(self):
-        my_dict = dict(self.__dict__)
-        if "_sa_instance_state" in my_dict.keys():
-            del my_dict["_sa_instance_state"]
-        my_dict["__class__"] = str(type(self).__name__)
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        my_dict["created_at"] = self.created_at.isoformat()
-        return my_dict
-
         """Convert instance into dict format"""
-        """dictionary = {}
+        dictionary = {}
         dictionary.update(self.__dict__)
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         dictionary.pop("_sa_instance_state", None)
-        return dictionary"""
+        return dictionary
 
     def delete(self):
         """ Delete instalncia from storage """
