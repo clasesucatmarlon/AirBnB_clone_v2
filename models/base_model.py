@@ -15,7 +15,6 @@ Base = declarative_base()
 class BaseModel:
     """A base class for all hbnb models"""
     id = Column('id', String(60), nullable=False, primary_key=True)
-    
     created_at = Column(
         'created_at',
         DateTime,
@@ -28,16 +27,15 @@ class BaseModel:
         nullable=False,
         default=datetime.utcnow()
     )
-    
-    
+
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        if not kwargs:
+        """         if not kwargs:
             from models import storage
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            """ storage.new(self) """
+            storage.new(self) # comentado
         else:
             kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
@@ -46,7 +44,34 @@ class BaseModel:
             del kwargs['__class__']
             for ke, va in kwargs.items():
                 setattr(self, ke, va)
-            self.__dict__.update(kwargs)
+            self.__dict__.update(kwargs) """
+
+        if len(kwargs) == 0:
+            # if no dictionary of attributes is passed in
+            self.id = str(uuid.uuid4())
+            self.created_at = self.updated_at = datetime.now()
+        else:
+            # assign a dictionary of attributes to instance
+
+            # preserve existing created_at time
+            if kwargs.get('created_at'):
+                kwargs["created_at"] = datetime.strptime(
+                    kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            else:
+                self.created_at = datetime.utcnow()  # assign current time
+            if kwargs.get('updated_at'):
+                # preserve existing updated_at time
+                kwargs["updated_at"] = datetime.strptime(
+                    kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            else:
+                self.updated_at = datetime.utcnow()
+
+            if not kwargs.get('id'):
+                self.id = str(uuid.uuid4())
+
+            for key, val in kwargs.items():
+                if "__class__" not in key:
+                    setattr(self, key, val)
 
     def __str__(self):
         """Returns a string representation of the instance"""

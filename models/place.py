@@ -8,6 +8,22 @@ from os import getenv
 import models
 
 
+place_amenity = Table(
+    'place_amenity',
+    Base.metadata,
+    Column('place_id',
+           String(60),
+           ForeignKey('places.id'),
+           primary_key=True,
+           nullable=False),
+    Column('amenity_id',
+           String(60),
+           ForeignKey('amenities.id'),
+           primary_key=True,
+           nullable=False)
+    )
+
+
 class Place(BaseModel, Base):
     """This is the class for Place """
     __tablename__ = 'places'
@@ -24,6 +40,8 @@ class Place(BaseModel, Base):
         longitude = Column(Float, nullable=True)
         reviews = relationship('Review', backref='place',
                                cascade='all, delete')
+        amenities = relationship('Amenity', secondary='place_amenity',
+                                 viewonly=False, backref='places')
     else:
         city_id = ""
         user_id = ""
@@ -47,3 +65,21 @@ class Place(BaseModel, Base):
                 if self.id == v["place_id"]:
                     ret.append(v)
             return ret
+
+        @property
+        def amenities(self):
+            """ getter amenities """
+            from models import storage
+            from models.amenity import Amenity
+            ret = []
+            for k, v in storage.all(Amenity).items():
+                ret.append(v)
+            return ret
+
+        @amenities.setter
+        def amenities(self, value):
+            """ setter Smenities """
+            from models import storage
+            from models.amenity import Amenity
+            if isinstance(value, Amenity):
+                self.amenity_ids.append(value.id)
