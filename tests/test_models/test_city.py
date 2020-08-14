@@ -5,7 +5,7 @@ from models.city import City
 
 
 class test_City(test_basemodel):
-    """ """
+    """ok"""
 
     def __init__(self, *args, **kwargs):
         """ok"""
@@ -19,6 +19,6 @@ class test_City(test_basemodel):
         self.assertEqual(type(new.state_id), str)
 
     def test_name(self):
-        """ """
+        """ok"""
         new = self.value()
         self.assertEqual(type(new.name), str)
