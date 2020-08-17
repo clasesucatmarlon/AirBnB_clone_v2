@@ -10,13 +10,11 @@ sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
 
 # Create test html file
-direct=/data/web_static/releases/test/index.html
+direct="/data/web_static/releases/test/index.html"
 echo -e """
     <html>
         <body>
-            <h1>
-                0x03. AirBnB clone - Deploy static
-            </h1>
+            Holberton School
         </body>
     </html>
 """ | sudo tee $direct
@@ -29,8 +27,8 @@ chown -R ubuntu:ubuntu /data/
 
 # Update Nginx configuration to serve the content of /data/web_static/current/
 # to hbnb_static (https://mydomainname.tech/hbnb_static)
-config_file=/etc/nginx/sites-available/default
-sed -i '29a \ \tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' $config_file
+config_file="/etc/nginx/sites-available/default"
+sudo sed -i '29a \ \tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' $config_file
 
 # restart server
-service nginx restart
+sudo service nginx restart
