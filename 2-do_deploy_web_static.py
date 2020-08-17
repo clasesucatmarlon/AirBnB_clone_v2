@@ -2,9 +2,9 @@
 """
 Fabric script that distributes an archive to web servers
 """
-from fabric.operations import put, run, sudo
-import os
-from fabric.api import run, local, sudo, env
+
+from os import path
+from fabric.api import run, local, sudo, env, put
 from datetime import datetime
 
 
@@ -28,8 +28,9 @@ def do_pack():
 def do_deploy(archive_path):
     """ deploy an archive from the archive_path
     """
-    if os.path.exists(archive_path) is False:
+    if not os.path.exists(archive_path):
         return False
+
     file_name = os.path.splitext(os.path.split(archive_path)[1])[0]
     target = '/data/web_static/releases/' + file_name
     path = archive_path.split('/')[1]
