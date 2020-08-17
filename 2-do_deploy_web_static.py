@@ -26,7 +26,8 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """deploy an archive from the archive_path"""
+    """ deploy an archive from the archive_path
+    """
     if os.path.exists(archive_path) is False:
         return False
     file_name = os.path.splitext(os.path.split(archive_path)[1])[0]
@@ -41,7 +42,6 @@ def do_deploy(archive_path):
         run('sudo rm -rf ' + target + '/web_static')
         run('sudo rm -rf /data/web_static/current')
         run('sudo ln -s ' + target + '/ /data/web_static/current')
-        print('deploy success')
         return True
     except:
         return False
