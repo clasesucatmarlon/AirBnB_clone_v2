@@ -3,8 +3,8 @@
 Fabric script that distributes an archive to web servers
 """
 from fabric.operations import put, run, sudo
-import os
-from fabric.api import run, local, sudo, env
+from os.path import exists
+from fabric.api import *
 from datetime import datetime
 
 
@@ -28,30 +28,23 @@ def do_pack():
 def do_deploy(archive_path):
     """ deploy an archive from the archive_path
     """
-    if os.path.exists(archive_path) is False:
+    if exists(archive_path) is False:
         return False
-
-    file_name = os.path.splitext(os.path.split(archive_path)[1])[0]
-    target = '/data/web_static/releases/' + file_name
-    path = archive_path.split('/')[1]
+    else:
+        pass
     try:
-        """put("{}/tmp/".format(archive_path))
-        run('sudo mkdir -p {}'.format(target))
-        run('sudo tar -xzf /tmp/{} -C {}/'.format(path, target))
-        run('sudo rm /tmp/{}'.format(path))
-        run('sudo mv {}/web_static/* {}/'.format(target, target))
-        run('sudo rm -rf {}/web_static'.format(target))
-        run('sudo rm -rf /data/web_static/current')
-        run('sudo ln -s {}/ /data/web_static/current'.format(target))"""
-
         put(archive_path, "/tmp/")
-        run('sudo mkdir -p ' + target)
-        run('sudo tar -xzf /tmp/' + path + ' -C ' + target + '/')
-        run('sudo rm /tmp/' + path)
-        run('sudo mv ' + target + '/web_static/* ' + target + '/')
-        run('sudo rm -rf ' + target + '/web_static')
-        run('sudo rm -rf /data/web_static/current')
-        run('sudo ln -s ' + target + '/ /data/web_static/current')
+        fil = archive_path.split("/")[1].split(".")[0]
+        path = "/data/web_static/releases/{}".format(fil)
+        run("mkdir {}".format(path))
+        run("tar -zxvf /tmp/{}.tgz -C {}/".format(fil, path))
+        run("sudo rm /tmp/{}".format(archive_path.split("/")[1]))
+        run("sudo rm /data/web_static/current")
+        run("sudo ln - sf / data/web_static/releases/{}\
+            / data/web_static/current".format(fil))
+        run("sudo mv / data/web_static/releases/{}/web_static/*\
+        / data/web_static/releases/{}".format(fil, fil))
+        run("rm -rf /data/web_static/releases/{}/web_static/".format(fil))
         return True
-    except Exception as m:
+    except:
         return False
