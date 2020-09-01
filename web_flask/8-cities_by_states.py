@@ -18,6 +18,15 @@ def teardown(self):
     storage.close()
 
 
+@app.route('/states_list')
+def states_list():
+    """ Display list state
+    """
+    states = storage.all(State).values()
+
+    return render_template('7-states_list.html', list=states)
+
+
 @app.route('/cities_by_states')
 def cities_by_states():
     """ Display list cities
