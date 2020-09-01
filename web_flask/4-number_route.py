@@ -44,14 +44,14 @@ def c(text):
 def python(text='is cool'):
     """ Display the site index
     """
-    return "Python " + text.replace("_", " ")
+    return "Python {}".format(text.replace("_", " "))
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
 def number(n):
     """ Display the site number parameter
     """
-    return str(n) + " is a number "
+    return "{} is a number".format(n)
 
 
 if __name__ == '__main__':
