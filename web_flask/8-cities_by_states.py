@@ -32,8 +32,8 @@ def cities_by_states():
     """ Display list cities
     """
     states = storage.all(State).values()
-
-    return render_template('8-cities_by_states.html', list=states)
+    cities = storage.all(City).values()
+    return render_template('8-cities_by_states.html', list=states, Cities=cities)
 
 
 if __name__ == '__main__':
