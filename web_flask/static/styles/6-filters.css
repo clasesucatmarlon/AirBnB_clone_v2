@@ -63,8 +63,10 @@ button:hover {
     background: #FAFAFA;
     padding-top: 12px;
     /* margin-left: -1px; */
-    margin-left: -1px;;
-    margin-top: 21px
+    margin-left: -1px;
+    margin-top: 21px;
+    overflow-y: auto;
+    height: 300px;
 }
 
 .amenities:hover .popover,
@@ -73,7 +75,7 @@ button:hover {
 }
 
 .filters .locations .popover h2 {
-    margin: 30px 0 10px 15px;
+    margin: 30px 0 10px 10px;
     font-weight: 600;
     font-size: 16px;
 }
